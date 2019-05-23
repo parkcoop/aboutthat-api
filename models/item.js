@@ -10,12 +10,13 @@ const itemSchema = new Schema({
   paleo: Boolean,
   dogToxic: Boolean,
   kidSafe: Boolean,
+  glycemicIndex: Number,
   containsGluten: Boolean,
   img: String,
   credit: String,
   keywords: Array,
-  mayContain: String,
-  sources: String
+  mayContain: Array,
+  sources: Array
 });
 
 const Item = mongoose.model("Item", itemSchema);
