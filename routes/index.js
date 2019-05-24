@@ -33,32 +33,29 @@ router.get("/items/:id", (req, res, next) => {
 router.post("/items/edit/:id", (req, res, next) => {
   let newDescriptionArray = [];
   let newSourceArray = [];
-  console.log(req.body);
+  let newContributorsArray = [];
+  console.log("current User", req.body.userId, req.body.username);
   Item.findById(req.params.id)
     .then(itemToUpdate => {
-      newDescriptionArray = itemToUpdate.description;
-      newSourceArray = itemToUpdate.sources;
-      newDescriptionArray.push(req.body.description);
-      newSourceArray.push(req.body.source);
-      console.log("new description: " + newDescriptionArray);
-      console.log("new source: " + newSourceArray);
-      Item.findByIdAndUpdate(req.params.id, {
-        description: newDescriptionArray,
-        sources: newSourceArray
-      })
-        .then(somethingElse => {
-          res.json({ final: somethingElse });
-        })
-        .catch(err => console.log(err));
-      // console.log("new description:" newDescriptionArray);
+      itemToUpdate.description.push(req.body.description);
+      itemToUpdate.sources.push(req.body.source);
+      if (!itemToUpdate.contributors.includes(req.body.username)) {
+        itemToUpdate.contributors.push(req.body.username);
+      }
+      itemToUpdate.save((err, doc) => {
+        User.findById(req.body.userId).then(user => {
+          user.additions.push({
+            item: itemToUpdate.name,
+            contribution: req.body.description
+          });
+          user.points += 10;
+          user.save((err, doc) => {
+            res.json({ updated: doc });
+          });
+        });
+      });
     })
-    .catch(err => {
-      console.log(err);
-    });
-  // Item.findByIdAndUpdate(req.params.id, {
-  //   description: newDescriptionArray
-  // });
-  // console.log("final description", newDescriptionArray);
+    .catch(err => console.error(err));
 });
 
 router.get("/users/:username", (req, res, next) => {

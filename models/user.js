@@ -5,7 +5,8 @@ const userSchema = new Schema(
   {
     username: { type: String, unique: true },
     password: String,
-    points: Number
+    points: { type: Number, default: 0 },
+    additions: Array
   },
   {
     timestamps: true
