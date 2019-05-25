@@ -46,6 +46,7 @@ router.post("/items/edit/:id", (req, res, next) => {
         User.findById(req.body.userId).then(user => {
           user.additions.push({
             item: itemToUpdate.name,
+            itemId: itemToUpdate._id,
             contribution: req.body.description
           });
           user.points += 10;
@@ -61,6 +62,46 @@ router.post("/items/edit/:id", (req, res, next) => {
 router.get("/users/:username", (req, res, next) => {
   User.findOne({ username: req.params.username }).then(user => {
     res.json(user);
+  });
+});
+
+router.post("/addEntry", (req, res, next) => {
+  console.log(req.body);
+  let ketoBoolean = true;
+  let veganBoolean = true;
+  let paleoBoolean = true;
+  if (req.body.keto == "false") {
+    ketoBoolean = false;
+  }
+  if (req.body.vegan == "false") {
+    veganBoolean = false;
+  }
+  if (req.body.paleo == "false") {
+    paleoBoolean = false;
+  }
+
+  const newItem = new Item({
+    name: req.body.name,
+    source: [req.body.source],
+    description: [req.body.description],
+    vegan: veganBoolean,
+    paleo: paleoBoolean,
+    keto: ketoBoolean,
+    mayContain: [req.body.mayContain],
+    contributors: [req.body.user]
+  });
+  newItem.save().then(saved => {
+    console.log(saved);
+    User.findById(req.body.userId).then(user => {
+      user.additions.push({
+        item: newItem.name,
+        itemId: newItem._id,
+        contribution: newItem.description
+      });
+      user.points += 50;
+      // console.log(user);
+      user.save();
+    });
   });
 });
 
