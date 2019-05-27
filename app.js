@@ -30,7 +30,10 @@ const debug = require("debug")(
 );
 
 const app = express();
-
+// app.use(express.static(path.join(__dirname, `/client`)));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname + `/client/public/index.html`));
+// });
 // Middleware Setup
 app.use(logger("dev"));
 app.use(bodyParser.json());
@@ -41,6 +44,7 @@ app.all("/*", function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
+
 // Express View engine setup
 app.use(
   session({

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "echo --- start --- && cd client && npm start",
     "dev": "DEBUG=aboutthat-api:* nodemon ./bin/www",
     "dev-windows": "nodemon ./bin/www"
   },
