@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Item = require("../models/item");
 const User = require("../models/user");
-
+const uploader = require("../configs/cloudinary-setup");
 /* GET home page */
 
 router.get("/items", (req, res, next) => {
@@ -88,6 +88,7 @@ router.post("/addEntry", (req, res, next) => {
     paleo: paleoBoolean,
     keto: ketoBoolean,
     mayContain: [req.body.mayContain],
+    img: req.body.imageUrl,
     contributors: [req.body.user]
   });
   newItem.save().then(saved => {
@@ -102,6 +103,26 @@ router.post("/addEntry", (req, res, next) => {
       // console.log(user);
       user.save();
     });
+  });
+});
+
+router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
+  // console.log("file is", req.file);
+
+  if (!req.file) {
+    next(new Error("no file uploaded"));
+    return;
+  }
+
+  res.json({ secure_url: req.file.secure_url });
+  // console.log(req.file.secure_url, "secure URL");
+});
+
+router.post("/uploadAvatar", (req, res, next) => {
+  console.log(req.body);
+  User.findById(req.body.userId).then(user => {
+    user.avatar = req.body.imageUrl;
+    user.save();
   });
 });
 
