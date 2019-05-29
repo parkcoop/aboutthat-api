@@ -7,7 +7,11 @@ const userSchema = new Schema(
     password: String,
     points: { type: Number, default: 0 },
     additions: Array,
-    avatar: String
+    avatar: {
+      type: String,
+      default:
+        "https://i2.wp.com/eikongroup.co.uk/wp-content/uploads/2017/04/Blank-avatar.png?ssl=1"
+    }
   },
   {
     timestamps: true
