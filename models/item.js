@@ -16,7 +16,8 @@ const itemSchema = new Schema({
   credit: String,
   keywords: Array,
   mayContain: Array,
-  sources: Array
+  sources: Array,
+  comments: Array
 });
 
 const Item = mongoose.model("Item", itemSchema);

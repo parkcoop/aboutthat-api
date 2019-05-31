@@ -126,4 +126,16 @@ router.post("/uploadAvatar", (req, res, next) => {
   });
 });
 
+router.post("/addcomment/:id", (req, res, next) => {
+  console.log(req.body, req.params.id);
+  Item.findById(req.params.id).then(itemToUpdate => {
+    itemToUpdate.comments.push({
+      username: req.body.user,
+      comment: req.body.comment,
+      timestamp: Date.now()
+    });
+    itemToUpdate.save();
+  });
+});
+
 module.exports = router;
