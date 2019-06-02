@@ -73,6 +73,7 @@ router.post("/addEntry", (req, res, next) => {
   if (req.body.keto == "false") {
     ketoBoolean = false;
   }
+
   if (req.body.vegan == "false") {
     veganBoolean = false;
   }
@@ -100,22 +101,18 @@ router.post("/addEntry", (req, res, next) => {
         contribution: newItem.description
       });
       user.points += 50;
-      // console.log(user);
       user.save();
     });
   });
 });
 
 router.post("/upload", uploader.single("imageUrl"), (req, res, next) => {
-  // console.log("file is", req.file);
-
   if (!req.file) {
     next(new Error("no file uploaded"));
     return;
   }
 
   res.json({ secure_url: req.file.secure_url });
-  // console.log(req.file.secure_url, "secure URL");
 });
 
 router.post("/uploadAvatar", (req, res, next) => {
